@@ -1,10 +1,13 @@
+import json
+
+from django.core.serializers.json import DjangoJSONEncoder
+from django.forms import model_to_dict
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.core import serializers
 
 # 序列化   ---- 生成json数据
 # 反序列化 ----- 解析json数据
-from home.models import Product, Productimage
+from home.models import Product, ProductImage
 
 
 def index(request):
@@ -15,12 +18,27 @@ def get_head_data(request):
     return
 
 
+'''
+{}
+[]()
+
+'''
+
+
 # 前后端分离,返回的时候不是模板 而是json数据
+# python  对象 不支持json
 def get_search_shop(request):
-    keywords = request.GET.get('key')
-    # queryset
-    products = Product.objects.filter(name__contains=keywords)
-    for product in products:
-        product.img = Productimage.objects.filter(pid=product.id).first()
-    data = serializers.serialize('json', products)
-    return HttpResponse(data, content_type='Application/json')
+    result = {}
+    try:
+        keywords = request.GET.get('key')
+        products = Product.objects.filter(name__contains=keywords)
+        li = []
+        for product in products:
+            product.img = ProductImage.objects.filter(pid=product.id).values('id').first().get('id')
+            # 对象 不支持json序列化   把python对象转化字典
+            li.append(model_to_dict(product))
+            result.update(state=200, msg='成功', data=li)
+    except BaseException as e:
+        result.update(state=-1, msg='失败')
+    #     cls
+    return HttpResponse(json.dumps(result, cls=DjangoJSONEncoder), content_type='Application/json')
