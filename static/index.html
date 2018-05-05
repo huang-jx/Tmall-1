@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+
+    <style type="text/css">
+        * {
+            padding: 0px;
+            margin: 0px
+        }
+
+        a, span {
+            text-decoration: none;
+            font-size: 14px;
+            color: black;
+        }
+
+        #header_top {
+            background: beige;
+            height: 40px;
+        }
+
+        .top_left {
+            padding: 10px;
+            float: left;
+            margin-left: 100px;
+        }
+
+        .top_right {
+            padding: 10px;
+            margin-right: 50px;
+            float: right;
+        }
+
+        .header_search {
+            background: red;
+            width: 300px;
+        }
+
+        .clearfix:after {
+            content: ".";
+            display: block;
+            height: 0;
+            visibility: hidden;
+            clear: both;
+        }
+
+        .clearfix {
+            *zoom: 1;
+        }
+
+        #search_inp {
+            width: 70%;
+            padding: 12px 0 8px 5px;
+        {#-webkit-tap-highlight-color: rgba(255, 255, 255, 0);#}{#-webkit-user-select: none;#}{#-moz-user-select: none;#}{#-webkit-appearance: none;#} outline: none;
+            border: none;
+        }
+
+        #search_btn {
+            padding: 10px;
+            margin-left: 10px;
+            background: red;
+            border: 0;
+            outline: none;
+            border: none;
+        }
+
+    </style>
+
+
+    <script language="JavaScript">
+        $(function () {
+            $('#search_btn').click(function () {
+                let keywords = $('#search_inp').val();
+                let search_url = 'http://127.0.0.1:8000/home/search?key=' + keywords;
+                /**
+                 * json 服务器与客服端通用的数据传递格式
+                 */
+                $.getJSON(search_url, function (data) {
+                    // 从服务器获取数据成功
+                    // dom 操作
+                })
+            })
+
+        })
+
+
+    </script>
+</head>
+
+<body>
+<div>
+    <div id="header">
+        <div id="header_top" class="clearfix">
+            <div class="top_left">
+                <span></span><span>天猫首页 喵，欢迎来天猫</span>
+                <a href="/static/account/login.html">登录</a>
+                <a href="/static/account/register.html">注册</a>
+            </div>
+            <div class="top_right">
+                <a href="/static/shop/order.html">我的订单</a>
+                <a href="/static/shop/shopcar.html">购物车</a>
+            </div>
+        </div>
+        <div id="search">
+            <img src="">
+            <div class="header_search">
+                <input type="text" id="search_inp" placeholder="请输入商品名称">
+                <input type="button" value="搜索" id="search_btn">
+            </div>
+        </div>
+
+    </div>
+    <div id="content">
+
+    </div>
+    <div id="footer">
+
+    </div>
+</div>
+
+
+</body>
+</html>
