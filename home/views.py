@@ -34,10 +34,11 @@ def get_search_shop(request):
         products = Product.objects.filter(name__contains=keywords)
         li = []
         for product in products:
-            product.img = ProductImage.objects.filter(pid=product.id).values('id').first().get('id')
+            img = ProductImage.objects.filter(pid=product.id).values('id').first().get('id')
             # 对象 不支持json序列化   把python对象转化字典
-            li.append(model_to_dict(product))
-            result.update(state=200, msg='成功', data=li)
+            pro = model_to_dict(product)
+            li.append(pro)
+        result.update(state=200, msg='成功', data=li)
     except BaseException as e:
         result.update(state=-1, msg='失败')
     #     cls
