@@ -79,8 +79,17 @@
                  * json 服务器与客服端通用的数据传递格式
                  */
                 $.getJSON(search_url, function (data) {
-                    // 从服务器获取数据成功
-                    // dom 操作
+                    let $ul = $('#search_shops');
+                    for (let item in  data) {
+
+                        obj = data[item];
+                        let $li = $('<li>');
+                        //$('<img>').attr('src', item.fields.imgurl).appendTo($li);
+                        $('<p>').text("¥" + obj.fields.promoteprice).appendTo($li);
+                        $('<a>').attr('href', 'product?pid=' + obj.pk).text(obj.fields.name).appendTo($li);
+                        $('<a>').attr('href', 'product?pid=' + obj.pk).text('天猫专卖').appendTo($li);
+                        $ul.append($li)
+                    }
                 })
             })
 
@@ -114,6 +123,17 @@
 
     </div>
     <div id="content">
+        <ul id="search_shops">
+            <!--
+            <li>
+                <img src="img">
+                <p>1,979.10</p>
+                <a href="product?pid=37">短发的方式发送方式</a>
+                <a href="product?pid=37">天猫专卖</a>
+            </li>
+            -->
+        </ul>
+
 
     </div>
     <div id="footer">

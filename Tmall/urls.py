@@ -4,9 +4,9 @@ from django.contrib import admin
 from home import views
 
 urlpatterns = [
-    url(r'^$/', views.index, name='index'),
-    url('admin/', admin.site.urls),
+    url(r'^$', views.index, name='index'),
+    url(r'^admin/', admin.site.urls),
     url('account/', include('account.urls')),
-    url('shop/', admin.site.urls),
-    url('home/', admin.site.urls),
+    url('shop/', include('shop.urls')),
+    url('home/', include('home.urls')),
 ]
