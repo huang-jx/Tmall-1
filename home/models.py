@@ -35,7 +35,7 @@ class BaseModel(models.Model):
 
     def qs_to_dict(self, qs=None):
         """
-        将QuerySet对象转化成字典
+        将QuerySet对象转化成li套字典
         :param qs:
         :return:
         """
@@ -71,7 +71,7 @@ class CategorySub2(models.Model):
         db_table = 'category_sub2'
 
 
-class CategorySub(models.Model):
+class CategorySub(BaseModel):
     name = models.CharField(max_length=255, blank=True, null=True)
     cid = models.ForeignKey(Category, models.DO_NOTHING, db_column='cid', blank=True, null=True)
 

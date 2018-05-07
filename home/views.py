@@ -7,7 +7,7 @@ from django.shortcuts import render
 
 # 序列化   ---- 生成json数据
 # 反序列化 ----- 解析json数据
-from home.models import Product, ProductImage
+from home.models import Product, ProductImage, Category, CategorySub
 
 
 def index(request):
@@ -63,4 +63,27 @@ def get_search_shop(request):
         result.update(state=200, msg='成功', data=li)
     except BaseException as e:
         result.update(state=-1, msg='失败')
+    return HttpResponse(json.dumps(result), content_type='Application/json')
+
+
+def get_category_data(reqeust):
+    """
+    获取分类菜单的数据
+    :return:
+    """
+    result = {}
+    try:
+        cate_list = Category.objects.all()
+        li = []
+        for cate in cate_list:
+            # select *  from  categorysub where cid=60
+            # 获取一级菜单对应的二级菜单的数据 [cate_sub]
+            sub_list = CategorySub.objects.filter(cid=cate.id)
+            # 将queryset对象转化成 列表套字典
+            cate.subs = cate.qs_to_dict(sub_list)
+            li.append(cate.to_dict())
+        result.update(state=200, msg='success', data=li)
+    except:
+        result.update(state=200, msg='查询失败')
+
     return HttpResponse(json.dumps(result), content_type='Application/json')

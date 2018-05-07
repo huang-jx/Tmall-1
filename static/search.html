@@ -79,84 +79,42 @@
             width: 100%;
         }
 
-        #nav {
-            margin-top: 5px;
-            height: 50px;
-            background: red;
-        }
-
-        .category {
-            float: left;
-            width: 150px;
-            background: gray;
-        }
-
-        .sub {
-            display: none;
-            float: left;
-            width: 800px;
-            height: 500px;
-            background: gold;
-        }
-
     </style>
 
+
     <script language="JavaScript">
+        let IMG_URL = 'http://127.0.0.1:8000/static/img/productSingle_middle/';
+
         $(function () {
-
-            let cate_url = 'http://127.0.0.1:8000/home/cates/';
-            /**
-             * 参数一  url
-             * 参数二 配置信息
-             */
-
-            /**
-             *后台  字典
-             * js  对象
-             *
-             * 后台  list
-             * js    数组
-             *
-             * 后台    str
-             * js     str
-             *
-             * 后台    数字类型
-             * js      数字类型
-             *
-             *
-             *          None
-             *          null
-             *
-             */
-            let setting = {
-                type: 'GET',
-                success: function (result) {
+            $('#search_btn').click(function () {
+                let keywords = $('#search_inp').val();
+                let search_url = 'http://127.0.0.1:8000/home/search?key=' + keywords;
+                /**
+                 * json 服务器与客服端通用的数据传递格式
+                 */
+                $.getJSON(search_url, function (result) {
                     if (result.state === 200) {
-                        let $cate_ul = $('.category').mouseout(function () {
-                            $('.sub').css('display', 'none')
-                        });
-
-                        for (let cate of result.data) {
-                            //创建li
-                            $('<li>')
-                                .mouseover(function () {
-                                    $('.sub')
-                                        .empty()
-                                        .css('display', 'block')
-                                        .append(
-                                            $('<li>').text(cate.subs[0].name)
-                                        )
-                                    //当鼠标移动到一级菜单的li上面的时候 显示二级菜单
-                                })
-
-                                .text(cate.name)
-                                .appendTo($cate_ul)
+                        let $ul = $('#search_shops');
+                        for (let index in  result.data) {
+                            //获取产品对象
+                            let product = result.data[index];
+                            let $li = $('<li>');
+                            $('<img>').attr('src', IMG_URL + product.img_list[0].id + '.jpg').appendTo($li);
+                            $('<p>').text("¥" + product.promote_price).appendTo($li);
+                            $('<a>').attr('href', 'product?pid=' + product.id).text(product.name).appendTo($li);
+                            $('<a>').attr('href', 'product?pid=' + product.id).text('天猫专卖').appendTo($li);
+                            $ul.append($li)
                         }
+                    } else {
+
                     }
-                },
-            };
-            $.ajax(cate_url, setting)
+
+                })
+            })
+
         })
+
+
     </script>
 </head>
 
@@ -181,30 +139,18 @@
                 <input type="button" value="搜索" id="search_btn">
             </div>
         </div>
-        <div id="nav">
-
-        </div>
-        <div>
-
-            <div id="cate" class="clearfix">
-                <ul class="category">
-                </ul>
-                <ul class="sub">
-                    <li>答复是范德萨发生</li>
-                </ul>
-            </div>
-
-
-            <div>
-
-            </div>
-        </div>
-
 
     </div>
     <div id="content">
         <ul id="search_shops" class="clearfix">
-
+            <!--
+            <li>
+                <img src="img">
+                <p>1,979.10</p>
+                <a href="product?pid=37">短发的方式发送方式</a>
+                <a href="product?pid=37">天猫专卖</a>
+            </li>
+            -->
         </ul>
 
 
