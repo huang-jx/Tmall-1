@@ -33,7 +33,8 @@ class BaseModel(models.Model):
                     dic[key] = getattr(self, key)
         return dic
 
-    def qs_to_dict(self, qs=None):
+    @staticmethod
+    def qs_to_dict(qs=None):
         """
         将QuerySet对象转化成li套字典
         :param qs:
@@ -45,6 +46,14 @@ class BaseModel(models.Model):
 
     def to_json(self):
         pass
+
+
+class Banner(BaseModel):
+    bid = models.AutoField(primary_key=True)
+    path = models.CharField(max_length=32)
+
+    class Meta:
+        db_table = 't_banner'
 
 
 class Category(BaseModel):

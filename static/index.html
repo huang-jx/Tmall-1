@@ -3,14 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="css/common.css" rel="stylesheet" type="text/css">
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
 
     <style type="text/css">
-        * {
-            padding: 0px;
-            margin: 0px
-        }
-
         a, span {
             text-decoration: none;
             font-size: 14px;
@@ -37,18 +33,6 @@
         .header_search {
             background: red;
             width: 300px;
-        }
-
-        .clearfix:after {
-            content: ".";
-            display: block;
-            height: 0;
-            visibility: hidden;
-            clear: both;
-        }
-
-        .clearfix {
-            *zoom: 1;
         }
 
         #search_inp {
@@ -91,79 +75,120 @@
             background: gray;
         }
 
+        .category > li {
+            text-align: center;
+            padding: 5px;
+        }
+
+        .category > li > a {
+            font-size: 16px;
+        }
+
+        .category > li:hover {
+            background: white;
+        }
+
         .sub {
             display: none;
             float: left;
             width: 800px;
             height: 500px;
-            background: gold;
+            background: white;
+        }
+
+        .sub > li {
+            float: left;
+            padding: 5px 20px;
+        }
+
+        .sub > li > a {
+            font-size: 18px;
+        }
+
+        #head_cate {
+            position: relative;
+        }
+
+        #cate {
+            margin-left: 80px;
+            position: absolute;
+        }
+
+        #banner {
+            margin-left: 120px;
+            background: yellow;
+            text-align: center;
         }
 
     </style>
 
     <script language="JavaScript">
         $(function () {
+            init();
+        });
+
+        function init() {
+            /*加载数据*/
+            load_data();
+            /*创建分类菜单 */
+            init_cate();
+            /*创建轮播图*/
+            init_banner();
+        }
+
+        //初始化数据
+        function load_data() {
 
             let cate_url = 'http://127.0.0.1:8000/home/cates/';
-            /**
-             * 参数一  url
-             * 参数二 配置信息
-             */
-
-            /**
-             *后台  字典
-             * js  对象
-             *
-             * 后台  list
-             * js    数组
-             *
-             * 后台    str
-             * js     str
-             *
-             * 后台    数字类型
-             * js      数字类型
-             *
-             *
-             *          None
-             *          null
-             *
-             */
             let setting = {
                 type: 'GET',
                 success: function (result) {
                     if (result.state === 200) {
-                        let $cate_ul = $('.category').mouseout(function () {
-                            $('.sub').css('display', 'none')
-                        });
-
-                        for (let cate of result.data) {
-                            //创建li
-                            $('<li>')
-                                .mouseover(function () {
-                                    $('.sub')
-                                        .empty()
-                                        .css('display', 'block')
-                                        .append(
-                                            $('<li>').text(cate.subs[0].name)
-                                        )
-                                    //当鼠标移动到一级菜单的li上面的时候 显示二级菜单
-                                })
-
-                                .text(cate.name)
-                                .appendTo($cate_ul)
-                        }
+                        init_cate(result.data);
+                        init_banner(result.banners);
                     }
                 },
             };
             $.ajax(cate_url, setting)
-        })
+        }
+
+        //创建分类菜单
+        function init_cate(data) {
+            //给外层div设置移除事件
+            let $cate_ul = $('.cate').mouseout(function () {
+                $('.sub').toggle()
+            });
+            //动态创建li
+            for (let cate of data) {
+                //创建li
+                $('<li>')
+                    .mouseover(function () {
+                        //当鼠标移动到一级菜单的li上面的时候 显示二级菜单
+                        let $ul = $('.sub').empty().toggle();
+                        //动态的创建二级菜单
+                        for (let sub of cate.subs) {
+                            $('<li>').append($('<a>').text(sub.name)).appendTo($ul)
+                        }
+                    })
+                    // 在li中添加a标签
+                    .append($('<a>').text(cate.name))
+                    .appendTo($cate_ul)
+            }
+        }
+
+
+        function init_banner(banners) {
+            /** */
+
+        }
+
     </script>
 </head>
 
 <body>
 <div>
     <div id="header">
-        <div id="header_top" class="clearfix">
+        <div id="header_top" class="clear">
             <div class="top_left">
                 <span></span><span>天猫首页 喵，欢迎来天猫</span>
                 <a href="/static/account/login.html">登录</a>
@@ -184,29 +209,28 @@
         <div id="nav">
 
         </div>
-        <div>
-
-            <div id="cate" class="clearfix">
+        <div id="head_cate" class="clear">
+            <div id="cate" class="clear">
+                <!--一级菜单-->
                 <ul class="category">
                 </ul>
-                <ul class="sub">
-                    <li>答复是范德萨发生</li>
+                <!-- 二级菜单-->
+                <ul class="sub clear">
                 </ul>
             </div>
+            <div id="banner">
+                <ul>
 
-
-            <div>
-
+                </ul>
             </div>
         </div>
 
 
     </div>
     <div id="content">
-        <ul id="search_shops" class="clearfix">
+        <ul id="search_shops" class="clear">
 
         </ul>
-
 
     </div>
     <div id="footer">
