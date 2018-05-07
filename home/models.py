@@ -1,7 +1,53 @@
+import datetime
+from decimal import Decimal
+
 from django.db import models
 
+# DATETIME_FORMAT = "%Y/%m/%d %H:%M:%S"
+# DATE_FORMAT = "%Y/%m/%d"
+from django.db.models import QuerySet
 
-class Category(models.Model):
+
+class BaseModel(models.Model):
+    class Meta:
+        abstract = True
+
+    def to_dict(self):
+        """
+        把对象转化字典
+        """
+        #  内置函数 能获取对象的所有的
+        # .keys 获取所有的变量的名称 返回的是一个列表
+
+        dic = {}
+        for key in vars(self).keys():
+            if not key.startswith('_'):
+                # getattr 通过key来获取值 参数一  对象  参数二 key  参数三 默认值
+                if isinstance(getattr(self, key), datetime.date):
+                    dic[key] = datetime.date.strftime(getattr(self, key), '%Y%m%d')
+                elif isinstance(getattr(self, key), datetime.datetime):
+                    dic[key] = datetime.datetime.strftime(getattr(self, key), '%Y%m%d %H%M%S')
+                elif isinstance(getattr(self, key), Decimal):
+                    dic[key] = float(getattr(self, key))
+                else:
+                    dic[key] = getattr(self, key)
+        return dic
+
+    def qs_to_dict(self, qs=None):
+        """
+        将QuerySet对象转化成字典
+        :param qs:
+        :return:
+        """
+        if isinstance(qs, QuerySet):
+            li = [model.to_dict() for model in qs]
+        return li
+
+    def to_json(self):
+        pass
+
+
+class Category(BaseModel):
     name = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
@@ -25,7 +71,7 @@ class CategorySub2(models.Model):
         db_table = 'category_sub2'
 
 
-class Categorysub(models.Model):
+class CategorySub(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     cid = models.ForeignKey(Category, models.DO_NOTHING, db_column='cid', blank=True, null=True)
 
@@ -51,37 +97,34 @@ class Order(models.Model):
     status = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'order'
 
 
-class Orderitem(models.Model):
+class OrderItem(models.Model):
     pid = models.ForeignKey('Product', models.DO_NOTHING, db_column='pid', blank=True, null=True)
     oid = models.IntegerField(blank=True, null=True)
     uid = models.ForeignKey('User', models.DO_NOTHING, db_column='uid', blank=True, null=True)
     number = models.IntegerField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'orderitem'
 
-
-class Product(models.Model):
+class Product(BaseModel):
     name = models.CharField(max_length=255, blank=True, null=True)
     subtitle = models.CharField(db_column='subTitle', max_length=255, blank=True,
                                 null=True)  # Field name made lowercase.
-    orignalprice = models.FloatField(db_column='orignalPrice', blank=True, null=True)  # Field name made lowercase.
-    promoteprice = models.FloatField(db_column='promotePrice', blank=True, null=True)  # Field name made lowercase.
+    orignal_price = models.FloatField(db_column='orignalPrice', blank=True, null=True)  # Field name made lowercase.
+    promote_price = models.FloatField(db_column='promotePrice', blank=True, null=True)  # Field name made lowercase.
     stock = models.IntegerField(blank=True, null=True)
     cid = models.ForeignKey(Category, models.DO_NOTHING, db_column='cid', blank=True, null=True)
-    createdate = models.DateTimeField(db_column='createDate', blank=True, null=True)  # Field name made lowercase.
+    create_date = models.DateTimeField(db_column='createDate', blank=True, null=True)  # Field name made lowercase.
+    img_list = {}
 
     class Meta:
         db_table = 'product'
 
 
-class ProductImage(models.Model):
-    pid = models.ForeignKey(Product, models.DO_NOTHING, db_column='pid', related_name='pid', blank=True, null=True)
+class ProductImage(BaseModel):
+    pid = models.ForeignKey(Product, models.DO_NOTHING, db_column='pid', related_name='product_image', blank=True,
+                            null=True)
     type = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
@@ -97,7 +140,8 @@ class Property(models.Model):
 
         managed = False
 
-class Propertyvalue(models.Model):
+
+class PropertyValue(models.Model):
     pid = models.IntegerField(blank=True, null=True)
     ptid = models.ForeignKey(Property, models.DO_NOTHING, db_column='ptid', blank=True, null=True)
     value = models.CharField(max_length=255, blank=True, null=True)
@@ -110,7 +154,7 @@ class Review(models.Model):
     content = models.CharField(max_length=4000, blank=True, null=True)
     uid = models.ForeignKey('User', models.DO_NOTHING, db_column='uid', blank=True, null=True)
     pid = models.ForeignKey(Product, models.DO_NOTHING, db_column='pid', blank=True, null=True)
-    createdate = models.DateTimeField(db_column='createDate', blank=True, null=True)  # Field name made lowercase.
+    create_date = models.DateTimeField(db_column='createDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         db_table = 'review'

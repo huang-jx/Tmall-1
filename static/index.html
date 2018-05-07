@@ -67,10 +67,24 @@
             border: none;
         }
 
+        #search_shops > li {
+            float: left;
+            padding: 2px;
+            margin: 0 5px;
+            width: 25%;
+        }
+
+        #search_shops > li > img {
+            float: left;
+            width: 100%;
+        }
+
     </style>
 
 
     <script language="JavaScript">
+        let IMG_URL = 'http://127.0.0.1:8000/static/img/productSingle_middle/';
+
         $(function () {
             $('#search_btn').click(function () {
                 let keywords = $('#search_inp').val();
@@ -78,16 +92,17 @@
                 /**
                  * json 服务器与客服端通用的数据传递格式
                  */
-                $.getJSON(search_url, function (data) {
-                    if (data.state === 200) {
+                $.getJSON(search_url, function (result) {
+                    if (result.state === 200) {
                         let $ul = $('#search_shops');
-                        for (let item in  data.data) {
-                            obj = data[item];
+                        for (let index in  result.data) {
+                            //获取产品对象
+                            let product = result.data[index];
                             let $li = $('<li>');
-                            //$('<img>').attr('src', item.fields.imgurl).appendTo($li);
-                            $('<p>').text("¥" + obj.promoteprice).appendTo($li);
-                            $('<a>').attr('href', 'product?pid=' + obj.id).text(obj.name).appendTo($li);
-                            $('<a>').attr('href', 'product?pid=' + obj.id).text('天猫专卖').appendTo($li);
+                            $('<img>').attr('src', IMG_URL + product.img_list[0].id + '.jpg').appendTo($li);
+                            $('<p>').text("¥" + product.promote_price).appendTo($li);
+                            $('<a>').attr('href', 'product?pid=' + product.id).text(product.name).appendTo($li);
+                            $('<a>').attr('href', 'product?pid=' + product.id).text('天猫专卖').appendTo($li);
                             $ul.append($li)
                         }
                     } else {
@@ -127,7 +142,7 @@
 
     </div>
     <div id="content">
-        <ul id="search_shops">
+        <ul id="search_shops" class="clearfix">
             <!--
             <li>
                 <img src="img">

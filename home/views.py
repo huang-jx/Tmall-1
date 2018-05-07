@@ -21,12 +21,36 @@ def get_head_data(request):
 '''
 {}
 []()
+字符串
+数字
+null
+bool
 
 '''
 
 
 # 前后端分离,返回的时候不是模板 而是json数据
-# python  对象 不支持json
+# python  对象不支持json
+
+
+# 需要手动讲对象转化字典
+
+
+# 变量 = 值
+# # {key:value}
+# [
+#     {
+#         'id': 值
+#         'img_list': [
+#             {},
+#             {}
+#         ]
+#
+#     }
+#     ,
+#     product,
+#     ...
+
 def get_search_shop(request):
     result = {}
     try:
@@ -34,12 +58,9 @@ def get_search_shop(request):
         products = Product.objects.filter(name__contains=keywords)
         li = []
         for product in products:
-            img = ProductImage.objects.filter(pid=product.id).values('id').first().get('id')
-            # 对象 不支持json序列化   把python对象转化字典
-            pro = model_to_dict(product)
-            li.append(pro)
+            product.img_list = product.qs_to_dict(ProductImage.objects.filter(pid=product.id))
+            li.append((product.to_dict()))
         result.update(state=200, msg='成功', data=li)
     except BaseException as e:
         result.update(state=-1, msg='失败')
-    #     cls
-    return HttpResponse(json.dumps(result, cls=DjangoJSONEncoder), content_type='Application/json')
+    return HttpResponse(json.dumps(result), content_type='Application/json')
