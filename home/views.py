@@ -92,18 +92,39 @@ def get_category_data(reqeust):
     return HttpResponse(json.dumps(result), content_type='Application/json')
 
 
+# 分类信息表---一对多-->产品表---一对多--->产品图片表
+
+# class cate:
+#     products = [product,...]
+#
+# class product:
+#     imgs= [img,....]
+#
+# class img:
+#     pass
+
+
+
 def get_shop_data(reqeust):
     result = {}
+    # 保存分类信息的数据
     li = []
     try:
+        # 查询分类信息表
+        # SELECT *  FROM  category
         cates = Category.objects.all()
 
         for cate in cates:
-            # Product.objects.filter()
+            # Product.objects.filter(cid=cate.id)
             # 查询每个分类的商品信息
             products = cate.product_set.all()
+            # 遍历商品信息  通过商品对象来获取图片的信息
             for product in products:
+                # 商品跟图片表之前的关系是一对多的关系
+                # SELECT  * FROM  PRODUCTIMAGE WHERE PID=PRODUCT.ID
                 product.imgs = BaseModel.qs_to_dict(product.product_image.all())
+
+            # 商品信息添加到每个分类对象里
             cate.products = BaseModel.qs_to_dict(products)
             li.append(cate.to_dict())
         result.update(state=200, msg='success', data=li)

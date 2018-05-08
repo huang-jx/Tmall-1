@@ -73,6 +73,7 @@
         .category {
             float: left;
             width: 150px;
+            height: 500px;
             background: gray;
         }
 
@@ -129,7 +130,7 @@
     <!-- 轮播图样式-->
     <style type="text/css">
         #banner ul {
-            height: 500px;
+            min-height: 500px;
             overflow: hidden;
         }
 
@@ -201,11 +202,11 @@
         let shops_url = 'http://127.0.0.1:8000/home/shops/';
         let IMG_URL = 'http://127.0.0.1:8000/static/img/productSingle_middle/';
         $(function () {
-
-
             $.get(shops_url, function (result) {
                 if (null != result && result.state === 200 && result.data.length > 0) {
+
                     let $content = $('#content');
+                    //遍历分类菜单信息
                     for (let cate of result.data) {
                         //每一项的div
                         let $div = $('<div>');
@@ -216,11 +217,11 @@
 
                         //创建ul
                         let $ul = $('<ul>').attr('class', 'clear');
+                        //遍历产品信息
                         if (cate.products.length > 0) {
                             for (let product of cate.products) {
                                 //创建li元素
                                 let $li = $('<li>');
-                                //
                                 let $a = $('<a>');
                                 //给a标签添加img元素
                                 $a.append($('<img>').attr('src', IMG_URL + product.imgs[0].id + '.jpg'))
@@ -254,7 +255,7 @@
 <body>
 <div>
     <div id="header">
-        <div id="header_top" cateclass="clear">
+        <div id="header_top" class="clear">
             <div class="top_left">
                 <span></span><span>天猫首页 喵，欢迎来天猫</span>
                 <a href="/static/account/login.html">登录</a>
@@ -291,23 +292,8 @@
         </div>
     </div>
     <div id="content">
-        <!--
-       <div>
-        <h3>平板</h3>
-         <ul>
-           <li>
-               <a href="search.html">
-                   <img src="img/productDetail/660.jpg">
-                   <span>标题</span>
-                   <span>价格</span>
-               </a>
-           </li>
-       </ul>
-       </div>-->
-
     </div>
     <div id="footer">
-
 
     </div>
 </div>
