@@ -1,13 +1,11 @@
 import json
 
-from django.core.serializers.json import DjangoJSONEncoder
-from django.forms import model_to_dict
 from django.http import HttpResponse
 from django.shortcuts import render
 
 # 序列化   ---- 生成json数据
 # 反序列化 ----- 解析json数据
-from home.models import Product, ProductImage, Category, CategorySub, Banner
+from home.models import Product, ProductImage, Category, CategorySub, Banner, BaseModel
 
 
 def index(request):
@@ -66,6 +64,8 @@ def get_search_shop(request):
     return HttpResponse(json.dumps(result), content_type='Application/json')
 
 
+# django  rest
+
 # 合理的合并请求
 def get_category_data(reqeust):
     """
@@ -84,6 +84,27 @@ def get_category_data(reqeust):
             sub_list = CategorySub.objects.filter(cid=cate.id)
             # 将queryset对象转化成 列表套字典
             cate.subs = Category.qs_to_dict(sub_list)
+            li.append(cate.to_dict())
+        result.update(state=200, msg='success', data=li)
+    except:
+        result.update(state=200, msg='查询失败')
+
+    return HttpResponse(json.dumps(result), content_type='Application/json')
+
+
+def get_shop_data(reqeust):
+    result = {}
+    li = []
+    try:
+        cates = Category.objects.all()
+
+        for cate in cates:
+            # Product.objects.filter()
+            # 查询每个分类的商品信息
+            products = cate.product_set.all()
+            for product in products:
+                product.imgs = BaseModel.qs_to_dict(product.product_image.all())
+            cate.products = BaseModel.qs_to_dict(products)
             li.append(cate.to_dict())
         result.update(state=200, msg='success', data=li)
     except:

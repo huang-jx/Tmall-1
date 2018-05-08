@@ -123,7 +123,7 @@ class Product(BaseModel):
     orignal_price = models.FloatField(db_column='orignalPrice', blank=True, null=True)  # Field name made lowercase.
     promote_price = models.FloatField(db_column='promotePrice', blank=True, null=True)  # Field name made lowercase.
     stock = models.IntegerField(blank=True, null=True)
-    cid = models.ForeignKey(Category, models.DO_NOTHING, db_column='cid', blank=True, null=True)
+    cid = models.ForeignKey(Category, models.DO_NOTHING, db_column = 'cid', blank = True, null = True)
     create_date = models.DateTimeField(db_column='createDate', blank=True, null=True)  # Field name made lowercase.
     img_list = {}
 

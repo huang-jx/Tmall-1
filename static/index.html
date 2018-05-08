@@ -5,6 +5,8 @@
     <title>Title</title>
     <link href="css/common.css" rel="stylesheet" type="text/css">
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="/static/js/unslider.min.js"></script>
+    <script src="js/home.js"></script>
 
     <style type="text/css">
         a, span {
@@ -38,7 +40,6 @@
         #search_inp {
             width: 70%;
             padding: 12px 0 8px 5px;
-        {#-webkit-tap-highlight-color: rgba(255, 255, 255, 0);#}{#-webkit-user-select: none;#}{#-moz-user-select: none;#}{#-webkit-appearance: none;#} outline: none;
             border: none;
         }
 
@@ -111,84 +112,149 @@
 
         #cate {
             margin-left: 80px;
+            height: 500px;
             position: absolute;
+            z-index: 2;
         }
 
         #banner {
+            z-index: 1;
             margin-left: 120px;
             background: yellow;
             text-align: center;
         }
 
+
+    </style>
+    <!-- 轮播图样式-->
+    <style type="text/css">
+        #banner ul {
+            height: 500px;
+            overflow: hidden;
+        }
+
+        #banner ul li {
+            float: left;
+            overflow: hidden;
+        }
+
+        #banner .dots {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 20px;
+        }
+
+        #banner .dots li {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin: 0 4px;
+            text-indent: -999em;
+            border: 2px solid #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            opacity: .4;
+            -webkit-transition: background .5s, opacity .5s;
+            -moz-transition: background .5s, opacity .5s;
+            transition: background .5s, opacity .5s;
+        }
+
+        #banner .dots li.active {
+            background: #fff;
+            opacity: 1;
+        }
+
+        #banner .arrow {
+            position: absolute;
+            top: 200px;
+        }
+
+
     </style>
 
+
+    <!--主内容的样式 -->
+    <style type="text/css">
+        #content h3 {
+            font-size: 18px;
+            padding: 10px;
+            font-weight: bold;
+            border-left: 5px solid aqua;
+        }
+
+        #content h3 {
+            border-left: 5px solid aqua;
+        }
+
+        #content li {
+            margin: 2px;
+            padding: 5px;
+            float: left;
+            width: 18%;
+        }
+
+    </style>
+
+
     <script language="JavaScript">
+        let shops_url = 'http://127.0.0.1:8000/home/shops/';
+        let IMG_URL = 'http://127.0.0.1:8000/static/img/productSingle_middle/';
         $(function () {
-            init();
-        });
 
-        function init() {
-            /*加载数据*/
-            load_data();
-            /*创建分类菜单 */
-            init_cate();
-            /*创建轮播图*/
-            init_banner();
-        }
 
-        //初始化数据
-        function load_data() {
+            $.get(shops_url, function (result) {
+                if (null != result && result.state === 200 && result.data.length > 0) {
+                    let $content = $('#content');
+                    for (let cate of result.data) {
+                        //每一项的div
+                        let $div = $('<div>');
+                        //给div添加在元素
 
-            let cate_url = 'http://127.0.0.1:8000/home/cates/';
-            let setting = {
-                type: 'GET',
-                success: function (result) {
-                    if (result.state === 200) {
-                        init_cate(result.data);
-                        init_banner(result.banners);
-                    }
-                },
-            };
-            $.ajax(cate_url, setting)
-        }
+                        //创建分类标题
+                        let $h3 = $('<h3>').text(cate.name);
 
-        //创建分类菜单
-        function init_cate(data) {
-            //给外层div设置移除事件
-            let $cate_ul = $('.cate').mouseout(function () {
-                $('.sub').toggle()
-            });
-            //动态创建li
-            for (let cate of data) {
-                //创建li
-                $('<li>')
-                    .mouseover(function () {
-                        //当鼠标移动到一级菜单的li上面的时候 显示二级菜单
-                        let $ul = $('.sub').empty().toggle();
-                        //动态的创建二级菜单
-                        for (let sub of cate.subs) {
-                            $('<li>').append($('<a>').text(sub.name)).appendTo($ul)
+                        //创建ul
+                        let $ul = $('<ul>').attr('class', 'clear');
+                        if (cate.products.length > 0) {
+                            for (let product of cate.products) {
+                                //创建li元素
+                                let $li = $('<li>');
+                                //
+                                let $a = $('<a>');
+                                //给a标签添加img元素
+                                $a.append($('<img>').attr('src', IMG_URL + product.imgs[0].id + '.jpg'))
+                                    .append($('<span>').text(product.name))
+                                    .append($('<span>').text(product.promote_price));
+                                //将a标签添加到li中
+                                $li.append($a);
+                                $ul.append($li)
+                            }
                         }
-                    })
-                    // 在li中添加a标签
-                    .append($('<a>').text(cate.name))
-                    .appendTo($cate_ul)
-            }
-        }
+                        /**
+                         * 1.查找最外层的div
+                         * 2 子div添加到外层的div
+                         * 3.把h3 添加到子div
+                         * 4.把ul添加到子div
+                         */
+                        $('#content').append($div.append($h3).append($ul));
+                    }
 
+                }
 
-        function init_banner(banners) {
-            /** */
+            })
 
-        }
+        })
+
 
     </script>
+
 </head>
 
 <body>
 <div>
     <div id="header">
-        <div id="header_top" class="clear">
+        <div id="header_top" cateclass="clear">
             <div class="top_left">
                 <span></span><span>天猫首页 喵，欢迎来天猫</span>
                 <a href="/static/account/login.html">登录</a>
@@ -220,24 +286,31 @@
             </div>
             <div id="banner">
                 <ul>
-
                 </ul>
             </div>
         </div>
-
-
     </div>
     <div id="content">
-        <ul id="search_shops" class="clear">
-
-        </ul>
+        <!--
+       <div>
+        <h3>平板</h3>
+         <ul>
+           <li>
+               <a href="search.html">
+                   <img src="img/productDetail/660.jpg">
+                   <span>标题</span>
+                   <span>价格</span>
+               </a>
+           </li>
+       </ul>
+       </div>-->
 
     </div>
     <div id="footer">
 
+
     </div>
 </div>
-
 
 </body>
 </html>
