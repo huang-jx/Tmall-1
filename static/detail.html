@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<!-- 数据加载(查询)  数据(增加,删除)  -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- css
+     选择器
+     盒子模型
+     padding margin
+     border  content(height  width)
+
+     浮动  定位   打乱正常的文档流
+     常用其他属性   背景 字体大小,hover
+     -->
+    <link href="css/common.css" rel="stylesheet" type="text/css">
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <!-- -->
+    <script language="JavaScript" type="text/javascript">
+        //获取当前浏览路径
+        //alert(window.location.pathname);
+        //获取浏览器访问地址参数(?后面的带的东西)
+        let DETAIL_URL = 'http://127.0.0.1:8000/home/detail'
+            + window.location.search; //?pid=89
+
+        $(function () {
+            $.get(DETAIL_URL, function (result) {
+                if (result != null && result.data != null) {
+                    show_shop_info(result.data);
+                    show_shop_img(result.data.imgs);
+                }
+            })
+
+        });
+
+        //显示产品信息
+        function show_shop_info(product) {
+            let $name = $('#shop_detail').find('h3');
+            $name.text(product.name);
+            let $orignal_price = $('#orignal_price');
+            $orignal_price.text(product.orignal_price);
+            let $promote_price = $('#promote_price');
+            $promote_price.text(product.promote_price);
+            let $stock = $('#stock');
+            $stock.text(product.stock);
+        }
+
+        let SINGLE_IMG_URL = 'http://127.0.0.1:8000/static/img/productSingle_middle/';
+
+        function show_shop_img(img_list) {
+            let $small_img = $('#shop_small_img');
+
+            for (let img of img_list) {
+                $('<img>')
+                    .attr('src', SINGLE_IMG_URL + img.id + '.jpg')
+                    .mousemove(function () {
+                        $('#shop_big_img').attr('src', $(this).attr('src'))
+                    })
+                    .appendTo($small_img)
+            }
+            $('#shop_big_img').attr('src', SINGLE_IMG_URL + img_list[0].id + '.jpg');
+        }
+
+    </script>
+
+
+    <style type="text/css">
+        #t {
+            display: inline-block;
+            background: url("/static/img/site/gouwujuan.png") no-repeat;
+            width: 116px;
+            height: 32px;
+        }
+
+        #shop_detail {
+            width: 50%;
+            float: left;
+        }
+
+        #shop_detail > h3 {
+            padding: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .huasuan {
+            font-size: 15px;
+            background: green;
+            text-align: center;
+            line-height: 40px;
+            height: 40px;
+        }
+
+        #shop_img {
+            border: 1px solid gainsboro;
+            float: left;
+            width: 48%;
+        }
+
+        #shop_big_img, #shop_small_img {
+            padding: 20px;
+            width: 80%;
+        }
+
+        #shop_small_img > img {
+            width: 18%;
+            text-align: center;
+            margin: 0 2px;
+            padding: 1px;
+        }
+
+        #shop_small_img > img:hover {
+            border: 1px solid red;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div class="clear">
+    <div id="shop_img">
+        <img id="shop_big_img">
+
+        <div id="shop_small_img">
+
+
+        </div>
+    </div>
+    <div id="shop_detail">
+        <h3></h3>
+        <p class="huasuan">聚划算 此商品即将参加聚划算，1天19小时后开始</p>
+        <span id="t"></span><span>全天猫实物商品通用</span>
+        <p><span>当前价格</span><span id="orignal_price"></span></p>
+        <p><span>促销价格</span><span id='promote_price'></span></p>
+        <p><span>销量:</span><span>1213</span> | <span>累计评价</span><span>121313</span></p>
+
+        数量<input type="number">件 库存<span id="stock"></span>件
+        <div>
+            <button type='button'>立即购买</button>
+            <button type="button">加入购物车</button>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
