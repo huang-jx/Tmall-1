@@ -1,11 +1,12 @@
 import json
 
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import render
 
 # 序列化   ---- 生成json数据
 # 反序列化 ----- 解析json数据
-from home.models import Product, ProductImage, Category, CategorySub, Banner, BaseModel
+from home.models import Product, ProductImage, Category, CategorySub, Banner, BaseModel, Review, OrderItem
 
 
 def index(request):
@@ -104,7 +105,6 @@ def get_category_data(reqeust):
 #     pass
 
 
-
 def get_shop_data(reqeust):
     result = {}
     # 保存分类信息的数据
@@ -131,4 +131,27 @@ def get_shop_data(reqeust):
     except:
         result.update(state=200, msg='查询失败')
 
+    return HttpResponse(json.dumps(result), content_type='Application/json')
+
+
+def get_shop_detail(request):
+    result = {}
+    pid = request.GET.get('pid')
+    try:
+        product = Product.objects.get(id=pid)
+        # 获取详情图片数据
+        img_queryset = product.product_image.filter(type='type_single')
+        product.imgs = BaseModel.qs_to_dict(img_queryset)
+        # Review.objects.filter(pid=pid).count()
+        # 评论数据
+        product.comment_count = product.review_set.count()
+        # 获取产品的销售量
+        # product.orderitem_set.aggregate(count=Sum('number'))  字典
+        number_dict = product.orderitem_set.aggregate(sum=Sum('number'))
+        product.sale_count = number_dict.get('sum')
+        result.update(state=200, msg='success', data=product.to_dict())
+    except Exception as e:
+        print(e)
+        # -2 表示商品信息不存在
+        result.update(state=-2, msg='查询失败')
     return HttpResponse(json.dumps(result), content_type='Application/json')

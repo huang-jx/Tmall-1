@@ -171,7 +171,6 @@
             top: 200px;
         }
 
-
     </style>
 
 
@@ -194,10 +193,8 @@
             float: left;
             width: 18%;
         }
-
     </style>
-
-
+    # a window.location.href =
     <script language="JavaScript">
         let shops_url = 'http://127.0.0.1:8000/home/shops/';
         let IMG_URL = 'http://127.0.0.1:8000/static/img/productSingle_middle/';
@@ -211,7 +208,6 @@
                         //每一项的div
                         let $div = $('<div>');
                         //给div添加在元素
-
                         //创建分类标题
                         let $h3 = $('<h3>').text(cate.name);
 
@@ -222,7 +218,9 @@
                             for (let product of cate.products) {
                                 //创建li元素
                                 let $li = $('<li>');
-                                let $a = $('<a>');
+                                //product.id;
+
+                                let $a = $('<a>').attr('href', 'http://127.0.0.1:8000/static/detail.html?pid=' + product.id);
                                 //给a标签添加img元素
                                 $a.append($('<img>').attr('src', IMG_URL + product.imgs[0].id + '.jpg'))
                                     .append($('<span>').text(product.name))
@@ -292,7 +290,9 @@
         </div>
     </div>
     <div id="content">
+
     </div>
+
     <div id="footer">
 
     </div>
