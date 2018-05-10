@@ -155,3 +155,4 @@ def get_shop_detail(request):
         # -2 表示商品信息不存在
         result.update(state=-2, msg='查询失败')
     return HttpResponse(json.dumps(result), content_type='Application/json')
+

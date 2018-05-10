@@ -1,65 +1,64 @@
 <!DOCTYPE html>
 <!-- 数据加载(查询)  数据(增加,删除)  -->
+<!--  -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <!-- css
+
+    <!--
+     css
      选择器
      盒子模型
      padding margin
      border  content(height  width)
-
      浮动  定位   打乱正常的文档流
      常用其他属性   背景 字体大小,hover
      -->
     <link href="css/common.css" rel="stylesheet" type="text/css">
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
     <!-- -->
-    <script language="JavaScript" type="text/javascript">
-        //获取当前浏览路径
-        //alert(window.location.pathname);
-        //获取浏览器访问地址参数(?后面的带的东西)
-        let DETAIL_URL = 'http://127.0.0.1:8000/home/detail'
-            + window.location.search; //?pid=89
+    <script src="js/home_detail.js"></script>
 
+    <script language="JavaScript">
         $(function () {
-            $.get(DETAIL_URL, function (result) {
-                if (result != null && result.data != null) {
-                    show_shop_info(result.data);
-                    show_shop_img(result.data.imgs);
-                }
-            })
+            let ADD_SHOP_CAR_URL = 'http://127.0.0.1:8000/shop/add/';
+            /**
+             * data 参数是上传数据的
+             * 支持两种类型
+             * obj    以对象形式封装数据 {uid:98,pid:1,num:1}
+             * 字符串
+             */
+            $('#join_car_btn').click(function () {
 
+
+                if (pid != null) {
+                    let num = $('#num_inp').val();
+                    let shop_car = {
+                        uid: 1,
+                        pid: pid,
+                        num: num,
+                    };
+                    /**
+                     let settings = {
+                    type: 'POST',
+                    data: shop_car,
+                    success: function (result) {
+                        alert(result)
+                    }
+                };
+                     $.ajax(ADD_SHOP_CAR_URL, settings)
+                     */
+                    //等价于下面这句代码
+                    $.post(ADD_SHOP_CAR_URL, shop_car, function (result) {
+                        alert(result)
+                    });
+
+                }
+
+            })
         });
 
-        //显示产品信息
-        function show_shop_info(product) {
-            let $name = $('#shop_detail').find('h3');
-            $name.text(product.name);
-            let $orignal_price = $('#orignal_price');
-            $orignal_price.text(product.orignal_price);
-            let $promote_price = $('#promote_price');
-            $promote_price.text(product.promote_price);
-            let $stock = $('#stock');
-            $stock.text(product.stock);
-        }
-
-        let SINGLE_IMG_URL = 'http://127.0.0.1:8000/static/img/productSingle_middle/';
-
-        function show_shop_img(img_list) {
-            let $small_img = $('#shop_small_img');
-
-            for (let img of img_list) {
-                $('<img>')
-                    .attr('src', SINGLE_IMG_URL + img.id + '.jpg')
-                    .mousemove(function () {
-                        $('#shop_big_img').attr('src', $(this).attr('src'))
-                    })
-                    .appendTo($small_img)
-            }
-            $('#shop_big_img').attr('src', SINGLE_IMG_URL + img_list[0].id + '.jpg');
-        }
 
     </script>
 
@@ -117,14 +116,14 @@
 
 </head>
 <body>
-
+# 请求行 请求头 请求体(post)
 <div class="clear">
+    //get 请求的行
+    //post 请求
     <div id="shop_img">
         <img id="shop_big_img">
 
         <div id="shop_small_img">
-
-
         </div>
     </div>
     <div id="shop_detail">
@@ -134,11 +133,10 @@
         <p><span>当前价格</span><span id="orignal_price"></span></p>
         <p><span>促销价格</span><span id='promote_price'></span></p>
         <p><span>销量:</span><span>1213</span> | <span>累计评价</span><span>121313</span></p>
-
-        数量<input type="number">件 库存<span id="stock"></span>件
+        数量<input type="number" id="num_inp">件 库存<span id="stock"></span>件
         <div>
-            <button type='button'>立即购买</button>
-            <button type="button">加入购物车</button>
+            <button type='button' id="buy_btn">立即购买</button>
+            <button type="button" id="join_car_btn">加入购物车</button>
         </div>
     </div>
 </div>

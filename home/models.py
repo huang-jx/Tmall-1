@@ -48,12 +48,14 @@ class BaseModel(models.Model):
         pass
 
 
+#
 class Banner(BaseModel):
     bid = models.AutoField(primary_key=True)
     path = models.CharField(max_length=32)
+    state = models.BooleanField(default=1)
 
     class Meta:
-        db_table = 't_banner'
+        db_table = 't_banner1'
 
 
 class Category(BaseModel):
@@ -76,7 +78,6 @@ class CategorySub2(models.Model):
     cs1id = models.ForeignKey(CategorySub1, models.DO_NOTHING, db_column='cs1id', blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'category_sub2'
 
 
@@ -85,7 +86,6 @@ class CategorySub(BaseModel):
     cid = models.ForeignKey(Category, models.DO_NOTHING, db_column='cid', blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'categorysub'
 
 
@@ -150,8 +150,6 @@ class Property(models.Model):
     class Meta:
         db_table = 'property'
 
-        managed = False
-
 
 class PropertyValue(models.Model):
     pid = models.IntegerField(blank=True, null=True)
@@ -179,3 +177,19 @@ class User(models.Model):
 
     class Meta:
         db_table = 'user'
+
+
+# 唯一约束  默认就是主键
+# 索引 增加查询到速度   同时也会影响 增删改的速度
+class ShopCar(models.Model):
+    shop_car_id = models.AutoField(primary_key=True)
+    # db_index=True 表示索引字典
+    uid = models.ForeignKey(User, db_column='uid', to_field='id', max_length=10, db_index=True)
+    pid = models.ForeignKey(Product, db_column='pid', to_field='id', max_length=20)
+    num = models.IntegerField()
+    create_date = models.DateTimeField(auto_now_add=True)
+    update_date = models.DateTimeField(auto_now=True)
+    status = models.BooleanField(default=1)
+
+    class Meta:
+        db_table = 't_shop_car'
