@@ -43,15 +43,15 @@
                     }
 
                      */
-
-                    for (let i = 0; i < result.data.length, i++;) {
-
+                    let i = 0
+                    for (const car of result.data) {
+                        let $clone_$car_box = $('#car_box_id').clone();
                         if (i === 0) {
-
+                            $('#car_box_id').find('price').text(car.product.promote_price)
                         } else {
-                            let $car_box = $('#car_box_id_1').clone();
+                            $clone_$car_box.find('price').text(car.product.promote_price).appendTo()
                         }
-
+                        i++
                     }
                 }
             });
@@ -64,6 +64,7 @@
 
 </head>
 <body>
+
 <section class="cartMain">
     <div class="cartMain_hd">
         <ul class="order_lists cartTop">
@@ -123,6 +124,8 @@
                 <div class="calBtn"><a href="javascript:;">结算</a></div>
             </div>
         </div>
+    </div>
+</section>
 </section>
 <section class="model_bg"></section>
 <section class="my_model">
