@@ -32,7 +32,6 @@ class BaseModel(models.Model):
                 else:
                     dic[key] = getattr(self, key)
         return dic
-
     @staticmethod
     def qs_to_dict(qs=None):
         """
@@ -43,6 +42,7 @@ class BaseModel(models.Model):
         if isinstance(qs, QuerySet):
             li = [model.to_dict() for model in qs]
         return li
+
 
     def to_json(self):
         pass
@@ -181,7 +181,7 @@ class User(models.Model):
 
 # 唯一约束  默认就是主键
 # 索引 增加查询到速度   同时也会影响 增删改的速度
-class ShopCar(models.Model):
+class ShopCar(BaseModel):
     shop_car_id = models.AutoField(primary_key=True)
     # db_index=True 表示索引字典
     uid = models.ForeignKey(User, db_column='uid', to_field='id', max_length=10, db_index=True)

@@ -5,10 +5,6 @@ $(function () {
 function init() {
     /*加载数据*/
     load_data();
-    /*创建分类菜单 */
-    init_cate();
-    /*创建轮播图*/
-    init_banner();
 }
 
 //初始化数据

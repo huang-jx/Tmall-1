@@ -2,7 +2,7 @@ import json
 
 from django.db.models import Sum
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect
 
 # 序列化   ---- 生成json数据
 # 反序列化 ----- 解析json数据
@@ -10,12 +10,7 @@ from home.models import Product, ProductImage, Category, CategorySub, Banner, Ba
 
 
 def index(request):
-    return render(request, 'index.html', {})
-
-
-def get_head_data(request):
-    return
-
+    return redirect('http://127.0.0.1:8000/static/index.html')
 
 '''
 {}
@@ -155,4 +150,3 @@ def get_shop_detail(request):
         # -2 表示商品信息不存在
         result.update(state=-2, msg='查询失败')
     return HttpResponse(json.dumps(result), content_type='Application/json')
-

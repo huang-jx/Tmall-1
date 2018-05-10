@@ -120,3 +120,4 @@ venv.bak/
 将删除 static/css/
 将删除 static/img/
 将删除 static/js/
+将删除 home/migrations/0001_initial.py

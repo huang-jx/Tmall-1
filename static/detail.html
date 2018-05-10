@@ -30,8 +30,8 @@
              * 字符串
              */
             $('#join_car_btn').click(function () {
-
-
+                //添加购车与后台进行的通信的时候禁止在点击
+                $('#join_car_btn').prop('disabled', 'disabled');
                 if (pid != null) {
                     let num = $('#num_inp').val();
                     let shop_car = {
@@ -39,20 +39,25 @@
                         pid: pid,
                         num: num,
                     };
-                    /**
-                     let settings = {
-                    type: 'POST',
-                    data: shop_car,
-                    success: function (result) {
-                        alert(result)
-                    }
-                };
-                     $.ajax(ADD_SHOP_CAR_URL, settings)
-                     */
+                    let settings = {
+                        type: 'POST',
+                        data: shop_car,
+                        success: function (result) {
+                            alert(result);
+                        },
+                        complete: function () {
+                            //表示不管请求失败或者成功都会执行
+                            $('#join_car_btn').removeAttr('disabled')
+                        }
+
+                    };
+                    $.ajax(ADD_SHOP_CAR_URL, settings);
                     //等价于下面这句代码
-                    $.post(ADD_SHOP_CAR_URL, shop_car, function (result) {
+                    /**
+                     * $.post(ADD_SHOP_CAR_URL, shop_car, function (result) {
                         alert(result)
                     });
+                     */
 
                 }
 
