@@ -19,8 +19,6 @@
                     //<ul class="order_lists">
                     let $ul = $('<ul>');
                     /**
-
-
                      for (let car of result.data) {
                         $('<li>')
                             .attr('class', 'list_chk')
@@ -41,25 +39,21 @@
                                 .attr('id', 'checkbox_2')
                                 .attr('class', 'son_check')
                             )
-
                             .appendTo($ul)
-
-
                     }
 
                      */
-                    for (let i = 0; i > result.data.length, i++;) {
-                        let $car_box = $('.cartBox');
-                        if (i === 0) {
-                            $car_box.find('')
-                        } else {
 
+                    for (let i = 0; i < result.data.length, i++;) {
+
+                        if (i === 0) {
+
+                        } else {
+                            let $car_box = $('#car_box_id_1').clone();
                         }
 
                     }
                 }
-
-
             });
 
         })
@@ -87,7 +81,7 @@
             <li class="list_op">操作</li>
         </ul>
     </div>
-    <div class="cartBox">
+    <div id="car_box_id_1" class="cartBox">
         <div class="order_content">
             <ul class="order_lists">
                 <li class="list_chk">
@@ -108,12 +102,12 @@
                 <li class="list_amount">
                     <div class="amount_box">
                         <a href="javascript:;" class="reduce reSty">-</a>
-                        <input type="text" value="1" class="sum">
+                        <input type="text" class="sum">
                         <a href="javascript:;" class="plus">+</a>
                     </div>
                 </li>
                 <li class="list_sum">
-                    <p class="sum_price">￥980</p>
+                    <p class="sum_price"></p>
                 </li>
                 <li class="list_op">
                     <p class="del"><a href="javascript:;" class="delBtn">移除商品</a></p>
@@ -132,10 +126,10 @@
 </section>
 <section class="model_bg"></section>
 <section class="my_model">
-    <p class="title">删除宝贝<span class="closeModel">X</span></p>
     <p>您确认要删除该宝贝吗？</p>
-    <div class="opBtn"><a href="javascript:;" class="dialog-sure">确定</a><a href="javascript:;"
-                                                                           class="dialog-close">关闭</a></div>
+    <div class="opBtn"><a href="javascript:" class="dialog-sure">确定</a>
+        <a href="javascript:" class="dialog-close">关闭</a>
+    </div>
 </section>
 
 
