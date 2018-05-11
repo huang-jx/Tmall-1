@@ -181,7 +181,7 @@ a:hover{
 .order_lists .list_price .price{
     margin-top: 20px;
     line-height: 18px;
-    font-family: Verdana,Tahoma,arial;
+    font-family: Verdana, Tahoma, arial, serif;
     color: #3c3c3c;
     font-weight: bold;
 }

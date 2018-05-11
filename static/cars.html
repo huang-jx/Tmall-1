@@ -14,10 +14,20 @@
         let CARS_URL = 'http://127.0.0.1:8000/shop/list/';
         $(function () {
             //获取购物车数据
+            /**
+             *
+             * 自己实现 jQuery 基本操作
+             * 第三方的模板使用
+             *  支付宝---->总金额  订单的名称   订单号 uuid全宇宙
+             * 点击结算 -----> 后台生成订---->发起支付
+             *
+             */
+
+
             $.getJSON(CARS_URL, 'uid=1', function (result) {
-                if (result.status === 200) {
+                if (result.status === 200 && result.data.length > 0) {
                     //<ul class="order_lists">
-                    let $ul = $('<ul>');
+                    //  let $ul = $('<ul>');
                     /**
                      for (let car of result.data) {
                         $('<li>')
@@ -43,25 +53,36 @@
                     }
 
                      */
-                    let i = 0
-                    for (const car of result.data) {
-                        let $clone_$car_box = $('#car_box_id').clone();
+                    let i = 0;
+                    for (let car of result.data) {
+                        let product = car.product;
                         if (i === 0) {
-                            $('#car_box_id').find('price').text(car.product.promote_price)
+                            $('.order_content').find('.price').text('￥' + car.product.promote_price);
+                            $('.order_content').find('.list_img').attr('src', '');
+                            $('.order_content').find('.sum').val(car.num);
+                            $('.order_content').find('.list_text>a').text(product.name);
+                            $('.order_content').find('.sum_price').text('￥' + product.promote_price * car.num);
+                            $('.order_content').find('.list_info').first().text('默认');
                         } else {
-                            $clone_$car_box.find('price').text(car.product.promote_price).appendTo()
+                            let $clone_$car_box = $('.order_content').first().clone(true, true);
+                            $clone_$car_box.find('.price').text('￥' + product.promote_price);
+                            $clone_$car_box.find('.list_img').attr('src', '');
+                            $clone_$car_box.find('.list_text>a').text(product.name);
+                            $clone_$car_box.find('.sum').val(car.num);
+                            $clone_$car_box.find('.list_info').first().text('默认');
+                            $clone_$car_box.find('.sum_price').text('￥' + product.promote_price * car.num);
+                            $clone_$car_box.appendTo($('#car_box_id'));
                         }
-                        i++
+                        i++;
                     }
+                    init_cars();
+                } else {
+                    $('#cartBox').remove();
+                    $('<p>').text('空空如也')
                 }
             });
-
         })
-
-
     </script>
-
-
 </head>
 <body>
 
@@ -82,34 +103,43 @@
             <li class="list_op">操作</li>
         </ul>
     </div>
-    <div id="car_box_id_1" class="cartBox">
+
+    <div id="car_box_id" class="cartBox">
         <div class="order_content">
             <ul class="order_lists">
+                <!--选择 -->
                 <li class="list_chk">
                     <input type="checkbox" id="checkbox_2" class="son_check">
                     <label for="checkbox_2"></label>
                 </li>
+                <!--商品的图片信息 -->
                 <li class="list_con">
                     <div class="list_img"><a href="javascript:;"><img src="" alt=""></a></div>
+                    <!--商品的介绍 -->
                     <div class="list_text"><a href="javascript:;"></a></div>
                 </li>
+                <!--商品的参数 -->
                 <li class="list_info">
                     <p></p>
                     <p></p>
                 </li>
+                <!--商品的价格 -->
                 <li class="list_price">
                     <p class="price"></p>
                 </li>
+                <!--商品的数量 -->
                 <li class="list_amount">
                     <div class="amount_box">
                         <a href="javascript:;" class="reduce reSty">-</a>
-                        <input type="text" class="sum">
+                        <input type="text" class="sum" value="1">
                         <a href="javascript:;" class="plus">+</a>
                     </div>
                 </li>
+                <!--单个商品的的总价  价格* 数量 -->
                 <li class="list_sum">
                     <p class="sum_price"></p>
                 </li>
+                <!--删除商品信息 -->
                 <li class="list_op">
                     <p class="del"><a href="javascript:;" class="delBtn">移除商品</a></p>
                 </li>
@@ -134,7 +164,5 @@
         <a href="javascript:" class="dialog-close">关闭</a>
     </div>
 </section>
-
-
 </body>
 </html>
