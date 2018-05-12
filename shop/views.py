@@ -1,5 +1,6 @@
 import uuid
-
+# django rest fromework
+# flask
 from django.db.models import F, Q
 from django.http import HttpResponse
 from .utils import response_json
